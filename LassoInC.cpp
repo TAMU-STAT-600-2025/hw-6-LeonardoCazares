@@ -8,6 +8,10 @@ double soft_c(double a, double lambda){
   // Compute |a| - lambda
   double difference = std::fabs(a) - lambda;
   
+  // If difference <= 0 return zero
+  if (difference <= 0.0) {
+    return 0.0;
+  }
 
 }
 
