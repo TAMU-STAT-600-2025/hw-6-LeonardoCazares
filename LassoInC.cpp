@@ -37,6 +37,12 @@ double lasso_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, const arma::
   // Loss term
   double loss = arma::dot(r, r) / (2.0 * n);    
   
+  // L1 penalty
+  double pen = lambda * arma::sum(arma::abs(beta));
+  
+  // Lasso objective function
+  return loss + pen;  
+  
 }
 
 // Lasso coordinate-descent on standardized data with one lamdba. Returns a vector beta.
