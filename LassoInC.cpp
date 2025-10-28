@@ -53,7 +53,15 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
   double n = Xtilde.n_rows();
   double p = Xtilde.n_cols();
 
+  // Initialize the beta given or not
+  arma::colvec beta;
+  if (beta_start.n_elem == 0) {
+    beta = arma::zeros<arma::colvec>(p);
+  } else {
+    beta = beta_start;
+  }
   
+
 }
 
 // Lasso coordinate-descent on standardized data with supplied lambda_seq. 
