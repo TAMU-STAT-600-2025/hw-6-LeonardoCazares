@@ -60,7 +60,14 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
   } else {
     beta = beta_start;
   }
+
+  // Get the current residual
+  arma::colvec r = Ytilde - Xtilde * beta;
   
+  // Compute the current lasso objective function
+  double fmin_old = lasso_c(Xtilde, Ytilde, beta, lambda);
+  
+
 
 }
 
