@@ -12,6 +12,13 @@ double soft_c(double a, double lambda){
   if (difference <= 0.0) {
     return 0.0;
   }
+  
+  // Otherwise return sign(a) * difference if difference > 0
+  if (a > 0.0) {
+    return difference;
+  } else {
+    return -difference;
+  }
 
 }
 
