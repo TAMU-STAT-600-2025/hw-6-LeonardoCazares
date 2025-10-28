@@ -5,7 +5,21 @@ using namespace Rcpp;
 // Soft-thresholding function, returns scalar
 // [[Rcpp::export]]
 double soft_c(double a, double lambda){
-  // Your function code goes here
+  // Compute |a| - lambda
+  double difference = std::fabs(a) - lambda;
+  
+
+}
+
+// [[Rcpp::export]]
+double soft_I(double a, double lambda){
+  if (a > lambda){
+    return(a-lambda);
+  }else if (a < -lambda){
+    return(a + lambda);
+  }else{
+    return(0);
+  }
 }
 
 // Lasso objective function, returns scalar
