@@ -30,8 +30,13 @@ double lasso_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, const arma::
   // Get dimentions
   double n = Xtilde.n_rows;
   double p = Xtilde.n_cols;
-  
 
+  // Define differences
+  arma::colvec r = Ytilde - Xtilde * beta;
+
+  // Loss term
+  double loss = arma::dot(r, r) / (2.0 * n);    
+  
 }
 
 // Lasso coordinate-descent on standardized data with one lamdba. Returns a vector beta.
