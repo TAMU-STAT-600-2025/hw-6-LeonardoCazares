@@ -22,21 +22,16 @@ double soft_c(double a, double lambda){
 
 }
 
-// [[Rcpp::export]]
-double soft_I(double a, double lambda){
-  if (a > lambda){
-    return(a-lambda);
-  }else if (a < -lambda){
-    return(a + lambda);
-  }else{
-    return(0);
-  }
-}
-
 // Lasso objective function, returns scalar
 // [[Rcpp::export]]
 double lasso_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, const arma::colvec& beta, double lambda){
   // Your function code goes here
+ 
+  // Get dimentions
+  double n = Xtilde.n_rows;
+  double p = Xtilde.n_cols;
+  
+
 }
 
 // Lasso coordinate-descent on standardized data with one lamdba. Returns a vector beta.
