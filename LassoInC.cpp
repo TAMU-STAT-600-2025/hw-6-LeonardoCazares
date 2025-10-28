@@ -67,6 +67,10 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
   // Compute the current lasso objective function
   double fmin_old = lasso_c(Xtilde, Ytilde, beta, lambda);
   
+  // Maximum number of iterations for coordinate descent, and the iteration variable
+  int max_iter = 1000;
+  int it = 0;
+  
 
 
 }
