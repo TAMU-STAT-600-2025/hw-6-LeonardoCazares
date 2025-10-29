@@ -66,6 +66,94 @@ m2_2 <- microbenchmark(lasso(Xtilde_big, Ytilde_big, beta_big, lambda_big),
                        times = 100)
 m2_2
 
+# Do at least 2 tests for fitLASSOstandardized function below. You are checking output agreements on at least 2 separate inputs
+#################################################
+
+# Small datasets
+X_small <- matrix(c(1, 2,
+              2, 3,
+              3, 4),
+            nrow = 3, byrow = TRUE)
+
+# Center and scale data
+Xtilde_small <- scale(X_small, center = TRUE, scale = TRUE)
+Y <- c(1, -1, 2)
+Ytilde_small <- as.numeric(scale(Y, center = TRUE, scale = FALSE))
+
+lambda_small <- 0.5
+
+test_that("fitLASSOstandardized_c matches R implementation on a small examples", {
+  
+  # R version
+  fit_r <- fitLASSOstandardized(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda = lambda_small,
+    beta_start = NULL,
+    eps = 1e-4
+  )
+  beta_r  <- fit_r$beta
+
+  # Rccp Arma. version
+  beta_cpp <- fitLASSOstandardized_c(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda = lambda_small,
+    beta_start = numeric(0),
+    eps = 1e-4
+  )
+  
+  expect_equal(as.numeric(beta_cpp),
+               as.numeric(beta_r),
+               tolerance = 1e-6)
+
+})
+
+set.seed(2025)
+n <- 40
+p <- 5
+
+# Generate random bigger X
+X_big <- matrix(rnorm(n * p), nrow = n, ncol = p)
+Xtilde_big <- scale(X_big, center = TRUE, scale = TRUE)
+
+# Generate centered Y (no scale)
+Y_big <- rnorm(n)
+Ytilde_big <- as.numeric(scale(Y_big, center = TRUE, scale = FALSE))
+
+lambda_big <- 0.2
+
+# Initial beta
+beta_start0 <- rep(0, p)
+
+test_that("fitLASSOstandardized_c matches R implementation on random standardized data.", {
+  
+  # R version
+  fit_r <- fitLASSOstandardized(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda = lambda_big,
+    beta_start = beta_start0,
+    eps = 1e-4
+  )
+  beta_r  <- fit_r$beta
+
+  # Rccp Arma. version
+  beta_cpp <- fitLASSOstandardized_c(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda = lambda_big,
+    beta_start = beta_start0,
+    eps = 1e-4
+  )
+  
+  # 1) Coefficients should match
+  expect_equal(as.numeric(beta_cpp),
+               as.numeric(beta_r),
+               tolerance = 1e-6)
+})
+
+
 
 # Tests on riboflavin data
 ##########################
