@@ -30,6 +30,41 @@ m1_2 <- microbenchmark(soft(x,0),
                        times = 1000)
 m1_2
 
+# Do at least 2 tests for lasso objective function below. You are checking output agreements on at least 2 separate inputs
+#################################################
+Xtilde <- matrix(c(1, 2,
+                   3, 4), nrow = 2, ncol = 2, byrow = TRUE)
+Ytilde <- c(1, -1)
+beta   <- c(0.5, -0.25)
+lambda <- 0.1
+
+Xtilde_big <- matrix(1:2500,
+                     nrow = 50, ncol = 50, byrow = TRUE)
+Ytilde_big <- -24:25
+beta_big   <- rnorm(50)
+lambda_big <- 0.1
+
+test_that('Check correctness of lasso objective function', {
+  out_r   <- lasso(Xtilde, Ytilde, beta, lambda)
+  out_cpp <- lasso_c(Xtilde, Ytilde, beta, lambda)
+  
+  expect_equal(out_cpp, out_r, tolerance = 1e-12)
+  
+  out_r   <- lasso(Xtilde_big, Ytilde_big, beta_big, lambda_big)
+  out_cpp <- lasso_c(Xtilde_big, Ytilde_big, beta_big, lambda_big)
+  
+  expect_equal(out_cpp, out_r, tolerance = 1e-12)
+})
+
+m2_1 <- microbenchmark(lasso(Xtilde, Ytilde, beta, lambda),
+                       lasso_c(Xtilde, Ytilde, beta, lambda),
+                       times = 1000)
+m2_1
+
+m2_2 <- microbenchmark(lasso(Xtilde_big, Ytilde_big, beta_big, lambda_big),
+                       lasso_c(Xtilde_big, Ytilde_big, beta_big, lambda_big),
+                       times = 100)
+m2_2
 
 
 # Tests on riboflavin data
