@@ -1,7 +1,8 @@
-
 # Header for Rcpp and RcppArmadillo
 library(Rcpp)
 library(RcppArmadillo)
+library(testthat)
+library(microbenchmark)
 
 # Source your C++ funcitons
 sourceCpp("LassoInC.cpp")
@@ -11,23 +12,25 @@ source("LassoFunctions.R")
 
 # Do at least 2 tests for soft-thresholding function below. You are checking output agreements on at least 2 separate inputs
 #################################################
+test_that('Check correctness of soft-thresholding',{
+  expect_equal(soft(10,5), soft_c(10,5)) # First test for fixed values
+  
+  x <- rnorm(1)
+  expect_equal(soft(x,0), soft_c(x,0)) # Second test for random values
+})
+
+m1_1 <- microbenchmark(soft(10,5),
+                       soft_c(10,5),
+                       times = 1000)
+m1_1
+
+x <- rnorm(1)
+m1_2 <- microbenchmark(soft(x,0),
+                       soft_c(x,0),
+                       times = 1000)
+m1_2
 
 
-# Do at least 2 tests for lasso objective function below. You are checking output agreements on at least 2 separate inputs
-#################################################
-
-
-# Do at least 2 tests for fitLASSOstandardized function below. You are checking output agreements on at least 2 separate inputs
-#################################################
-
-# Do microbenchmark on fitLASSOstandardized vs fitLASSOstandardized_c
-######################################################################
-
-# Do at least 2 tests for fitLASSOstandardized_seq function below. You are checking output agreements on at least 2 separate inputs
-#################################################
-
-# Do microbenchmark on fitLASSOstandardized_seq vs fitLASSOstandardized_seq_c
-######################################################################
 
 # Tests on riboflavin data
 ##########################
@@ -49,3 +52,4 @@ microbenchmark(
   fitLASSOstandardized_seq_c(out$Xtilde, out$Ytilde, outl$lambda_seq),
   times = 10
 )
+
