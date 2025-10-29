@@ -192,6 +192,64 @@ m3_2 <- microbenchmark(
 
 m3_2
 
+# Do at least 2 tests for fitLASSOstandardized_seq function below. You are checking output agreements on at least 2 separate inputs
+#################################################
+
+lambda_seq <- c(1.0, 0.5, 0.1)
+
+test_that("fitLASSOstandardized_seq_c matches R version on the small dataset", {
+
+  # R version
+  fit_r <- fitLASSOstandardized_seq(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda_seq = lambda_seq,
+    n_lambda = NULL,    # ignored because we supply lambda_seq
+    eps = 1e-4
+  )
+  beta_mat_r <- fit_r$beta_mat   # p x length(lambda_seq)
+  
+  # Rcpp Arma. version
+  beta_mat_cpp <- fitLASSOstandardized_seq_c(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda_seq = lambda_seq,
+    eps = 1e-4
+  )
+  
+  # Compare beta's matrices
+  expect_equal(as.numeric(beta_mat_cpp),
+               as.numeric(beta_mat_r),
+               tolerance = 1e-6)
+})
+
+test_that("fitLASSOstandardized_seq_c matches R version on the normal standardized data.", {
+  
+  # R version
+  fit_r <- fitLASSOstandardized_seq(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda_seq = lambda_seq,
+    n_lambda = NULL,    # ignored because we supply lambda_seq
+    eps = 1e-4
+  )
+  beta_mat_r <- fit_r$beta_mat   # p x length(lambda_seq)
+  
+  # Rcpp Arma. version
+  beta_mat_cpp <- fitLASSOstandardized_seq_c(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda_seq = lambda_seq,
+    eps = 1e-4
+  )
+  
+  # Compare beta's matrices
+  expect_equal(as.numeric(beta_mat_cpp),
+               as.numeric(beta_mat_r),
+               tolerance = 1e-6)
+})
+
+
 
 # Tests on riboflavin data
 ##########################
