@@ -71,7 +71,27 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
   int max_iter = 1000;
   int it = 0;
   
+  // Coordinate-descent
+  while (true) {
+    // New iteration
+    it += 1;
+    
+    // Loop over coordinates of beta
+    for (int j = 0; j < p; ++j) {
+      // Current column x_j
+      arma::colvec xj = Xtilde.col(j);
+      
+      // rho_j = sum( x_j * (r + x_j * beta[j]) ) / n
+      double rho_j = arma::dot(xj, (r + xj * beta(j))) / static_cast<double>(n);
+      
+      double lamj = lambda;
+      
+      // Soft-threshold update for coordinate j
+      double bj_new = soft_c(rho_j, lamj);
 
+  
+  // Return beta (solution vector)
+  return beta; 
 
 }
 
