@@ -153,6 +153,44 @@ test_that("fitLASSOstandardized_c matches R implementation on random standardize
                tolerance = 1e-6)
 })
 
+# Do microbenchmark on fitLASSOstandardized vs fitLASSOstandardized_c
+######################################################################
+
+m3_1 <- microbenchmark(
+  fitLASSOstandardized(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda = lambda_small,
+    beta_start = NULL,
+    eps = 1e-4
+  ),
+  beta_cpp <- fitLASSOstandardized_c(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda = lambda_small,
+    beta_start = numeric(0),
+    eps = 1e-4),
+  times = 1000)
+
+m3_1
+
+m3_2 <- microbenchmark(
+  fitLASSOstandardized(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda = lambda_big,
+    beta_start = NULL,
+    eps = 1e-4
+  ),
+  beta_cpp <- fitLASSOstandardized_c(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda = lambda_big,
+    beta_start = numeric(0),
+    eps = 1e-4),
+  times = 1000)
+
+m3_2
 
 
 # Tests on riboflavin data
