@@ -88,7 +88,26 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
       
       // Soft-threshold update for coordinate j
       double bj_new = soft_c(rho_j, lamj);
-
+      
+      // If coefficient changed, update residual and beta
+      if (bj_new != beta(j)) {
+        // Update
+        r = r - xj * (bj_new - beta(j));
+        beta(j) = bj_new;
+      }
+    }
+    
+    // Compute new objective
+    double fmin = lasso_c(Xtilde, Ytilde, beta, lambda);
+    
+    // Stop if improvement is smaller than eps OR max_iter reached
+    if ( (fmin_old - fmin) < eps || it >= max_iter ) {
+      break;
+    }
+    
+    // Otherwise continue
+    fmin_old = fmin;
+  }
   
   // Return beta (solution vector)
   return beta; 
