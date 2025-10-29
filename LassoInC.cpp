@@ -125,6 +125,33 @@ arma::mat fitLASSOstandardized_seq_c(const arma::mat& Xtilde, const arma::colvec
   int p = Xtilde.n_cols;                
   int L = lambda_seq.n_elem;            
   
-
+  // Matrix to store solutions
+  arma::mat beta_mat(p, L, arma::fill::zeros);
+  
+  // Beta with zeros
+  arma::colvec beta_start = arma::zeros(p);
+  
+  // Loop over each lambda in the sequence
+  for (int k = 0; k < L; ++k) {
+    double lam = lambda_seq(k);
+    
+    // Fit LASSO for this lambda using coordinate descent
+    arma::colvec beta_k = fitLASSOstandardized_c(
+      Xtilde,
+      Ytilde,
+      lam,
+      beta_start,
+      eps
+    );
+    
+    // Store current beta in the beta matrix
+    beta_mat.col(k) = beta_k;
+    
+    // Take the last beta as the new starter value
+    beta_start = beta_k;
+  }
+  
+  // Return p x L matrix of coefficients
+  return beta_mat;
 }
   
