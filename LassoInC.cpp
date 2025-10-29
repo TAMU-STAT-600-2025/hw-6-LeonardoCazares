@@ -101,7 +101,7 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
     double fmin = lasso_c(Xtilde, Ytilde, beta, lambda);
     
     // Stop if improvement is smaller than eps OR max_iter reached
-    if ( (fmin_old - fmin) < eps || it >= max_iter ) {
+    if ( (fmin_old - fmin) < eps ) {
       break;
     }
     

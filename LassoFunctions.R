@@ -155,8 +155,9 @@ fitLASSOstandardized <- function(Xtilde,
     # Update values for the objective function and the difference with the former one.
     fmin <- lasso(Xtilde, Ytilde, beta, lambda)
     # Check if the threshold has been overcomed or the max_iter reached.
-    if ((fmin_old - fmin) < eps || it >= max_iter)
-      break
+    if ((fmin_old - fmin) < eps){
+      break 
+    }
     fmin_old <- fmin
   }
   
