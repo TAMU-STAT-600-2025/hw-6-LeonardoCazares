@@ -249,7 +249,45 @@ test_that("fitLASSOstandardized_seq_c matches R version on the normal standardiz
                tolerance = 1e-6)
 })
 
+# Do microbenchmark on fitLASSOstandardized_seq vs fitLASSOstandardized_seq_c
+######################################################################
 
+
+m4_1 <- microbenchmark(
+  fitLASSOstandardized_seq(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda_seq = lambda_seq,
+    n_lambda = NULL,    # ignored because we supply lambda_seq
+    eps = 1e-4
+  ),
+  fitLASSOstandardized_seq_c(
+    Xtilde = Xtilde_small,
+    Ytilde = Ytilde_small,
+    lambda_seq = lambda_seq,
+    eps = 1e-4
+  ),
+  times = 1000)
+
+m4_1
+
+m4_2 <- microbenchmark(
+  fitLASSOstandardized_seq(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda_seq = lambda_seq,
+    n_lambda = NULL,    # ignored because we supply lambda_seq
+    eps = 1e-4
+  ),
+  fitLASSOstandardized_seq_c(
+    Xtilde = Xtilde_big,
+    Ytilde = Ytilde_big,
+    lambda_seq = lambda_seq,
+    eps = 1e-4
+  ),
+  times = 1000)
+
+m4_2
 
 # Tests on riboflavin data
 ##########################
